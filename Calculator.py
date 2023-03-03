@@ -1,73 +1,74 @@
-
 import logging
 logging.basicConfig(level=logging.INFO)
 
-print(type(3.1))
-
-print("Podaj działanie, posługując się odpowiednią liczbą: 1 Dodawanie, 2 Odejmowanie, 3 Mnożenie, 4 Dzielenie: ")
-
-def input_try_int():
-    argument = input()
-    check = 0
-    while check == 0:
-        try: 
-            int(argument)
-            check = 1
-            argument = int(argument)
-        except ValueError:
-            try:
-                float(argument)
-                check = 1
-                argument = float(argument)
-            except ValueError:
-                check = 0
-                logging.error(" Błąd! Podana wartość nie jest liczbą")
-                argument = input("podaj nową wartość: ")
-    return argument
-
-operation = input_try_int()
-
-while operation != 1 and operation !=2 and operation !=3 and operation !=4:
-    print("Wybrano nieprawidłowe działanie, wybierz spośród liczb 1-4: ")
-    operation = input_try_int()
-
-print("Podaj składnik 1: ")
-
-number1 = input_try_int()
-
-print("Podaj składnik 2: ")
-
-number2 = input_try_int()
-
-if operation == 1:
+def validate(argument):
+    try:
+        argument = float(argument)
+        return argument
+    except ValueError:
+        return False
+        
+def get_operation():
+    while True:
+        operation = input("Podaj działanie, posługując się odpowiednią liczbą: 1 Dodawanie, 2 Odejmowanie, 3 Mnożenie, 4 Dzielenie: ")
+        if operation in ["1", "2", "3", "4"]:
+            return operation
+        
+def get_arguments():
+    while True:
+        arg = input()
+        if validate(arg):
+            break
+    return float(arg)
+ 
+def add(arg1, arg2):
     answer = input("Wprowadź 'T' jeśli chcesz dodać więcej liczb: ")
-    numbers = [number1, number2]
-    result = number1 + number2
+    numbers = [arg1, arg2]
+    result = arg1 + arg2
     while answer == "T":
-        print("Podaj kolejny składnik")
-        number3 = input_try_int()
-        result = result + number3
-        numbers = numbers + [number3]
+        print("Podaj kolejny argument")
+        arg3 = get_arguments()
+        result = result + arg3
+        numbers = numbers + [arg3]
         answer = input("Wprowadź 'T' jeśli chcesz dodać więcej liczb: ")
-
     logging.info(f" Dodaję liczby: {numbers}")
-elif operation == 2:
-    result = number1 - number2
-    logging.info(f" Odejmuję {number2} od {number1}")
-elif operation == 3:
+    return result
+
+def sub(arg1, arg2):
+    result = arg1 - arg2
+    logging.info(f" Odejmuję {arg2} od {arg1}")
+    return result
+
+def mul(arg1, arg2):
     answer = input("Wprowadź 'T' jeśli chcesz pomnożyć więcej liczb: ")
-    numbers = [number1, number2]
-    result = number1 * number2
+    numbers = [arg1, arg2]
+    result = arg1 * arg2
     while answer == "T":
-        print("Podaj kolejny składnik")
-        number3 = input_try_int()
-        result = result * number3
+        print("Podaj kolejny argument")
+        arg3 = get_arguments()
+        result = result * arg3
+        numbers = numbers + [arg3]
         answer = input("Wprowadź 'T' jeśli chcesz pomnożyć więcej liczb: ")
     logging.info(f" Mnożę liczby: {numbers}")
-elif operation == 4:
-    result = number1 / number2
-    logging.info(f" Dzielę {number1} przez {number2}")
-else:
-    None
+    return result
 
-print(f"Wynik to {result}")
+def div(arg1, arg2):
+    result = arg1 / arg2
+    logging.info(f" Dzielę {arg1} przez {arg2}")
+    return result
+
+if __name__ == "__main__":
+    operation = get_operation()
+    print("Podaj pierwszy argument: ")
+    arg1 = get_arguments()
+    print("Podaj drugi argument: ")
+    arg2 = get_arguments()
+    print(arg1, arg2, operation)
+    if operation == "1":
+        print("Wynik to: ",add(arg1, arg2))
+    elif operation == "2":
+        print("Wynik to: ",sub(arg1, arg2))
+    elif  operation == "3":
+        print("Wynik to: ",mul(arg1, arg2))
+    elif  operation == "4":
+        print("Wynik to: ",div(arg1, arg2)) 
